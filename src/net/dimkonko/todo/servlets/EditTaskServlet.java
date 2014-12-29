@@ -33,15 +33,19 @@ public class EditTaskServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("task_id");
 		String title = request.getParameter("task_title");
-		String isDone = request.getParameter("isDone");
+		String isDone = request.getParameter("task_isDone");
 		
-		System.out.println(isDone);
-		
-		if (isDone.equals("on")) {
+		if(isDone != null) {
 			isDone = "1";
 		} else {
 			isDone = "0";
 		}
+		
+		System.out.println("Isdone: " + isDone);
+//		
+//		if (request.getParameter("isDone").equals("on")) {
+//			isDone = "1";
+//		}
 		
 		Connection con = null;
 		Statement st = null;

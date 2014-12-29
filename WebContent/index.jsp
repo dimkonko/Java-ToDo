@@ -60,9 +60,9 @@ try {
 	<div id="edit_div" hidden>
 		Edit:
 		<form  action="editTask" method="POST">
-			<input id="editId" type="text" name="task_id" />
-			<br><input id="editTitle" type="text" name="task_title" />
-			<br><input id="editIsDone" type="checkbox" name="isDone"/>
+			<input id="editId" type="text" name="task_id" hidden/>
+			<input id="editTitle" type="text" name="task_title" />
+			<br><input id="editIsDone" type="checkbox" name="task_isDone"/>
 			<br><input type="submit" value="Edit"/>
 		</form>
 	</div>
