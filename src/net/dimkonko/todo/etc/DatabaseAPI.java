@@ -10,20 +10,20 @@ import net.dimkonko.todo.objects.Task;
 
 public class DatabaseAPI {
 	
-	public static boolean addTask(String title) throws ClassNotFoundException, SQLException {	
-		String driverName = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/Todo";
-		String user = "root";
-		String dbpsw = "123456";
-
+	public static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
+	public static final String URL = "jdbc:mysql://localhost:3306/Todo";
+	public static final String USER = "root";
+	public static final String DBPSW = "123456";
+	
+	public static boolean addTask(String title) throws ClassNotFoundException, SQLException {
 		Connection con = null;
 		Statement st = null;
 		
 		String sql = String.format("INSERT INTO `tasks`(`title`, `isDone`) VALUES('%s', %s)",
 				title, 0);
 
-		Class.forName(driverName);
-		con = DriverManager.getConnection(url, user, dbpsw);
+		Class.forName(DRIVER_NAME);
+		con = DriverManager.getConnection(URL, USER, DBPSW);
 		st = con.createStatement();
 		
 		int status = st.executeUpdate(sql);
@@ -34,12 +34,7 @@ public class DatabaseAPI {
 		}
 	}
 	
-	public static boolean editTask(Task task) throws ClassNotFoundException, SQLException {
-		String driverName = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/Todo";
-		String user = "root";
-		String dbpsw = "123456";
-		
+	public static boolean editTask(Task task) throws ClassNotFoundException, SQLException {		
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
@@ -47,8 +42,8 @@ public class DatabaseAPI {
 		String sql = String.format("UPDATE `tasks` SET `title`='%s', `isDone`=%s WHERE id=%s",
 				task.getTitle(), task.isDone(), task.getID());
 
-		Class.forName(driverName);
-		con = DriverManager.getConnection(url, user, dbpsw);
+		Class.forName(DRIVER_NAME);
+		con = DriverManager.getConnection(URL, USER, DBPSW);
 		st = con.createStatement();
 		
 		int status = st.executeUpdate(sql);
