@@ -52,7 +52,7 @@ try {
 		<tr>
 			<td class="task_id"><%=task.getID() %></td>
 			<td class="task_title"><%=task.getTitle() %></td>
-			<td><input type="Checkbox" <% if (task.isDone() > 0) {%>checked<% }%>/></td>
+			<td><input type="Checkbox" <% if (task.isDone() > 0) {%>checked<% }%> readonly/></td>
 			<td><input class="edit_task" type="button" value="Edit" /></td>
 		</tr>
 		<%} %>

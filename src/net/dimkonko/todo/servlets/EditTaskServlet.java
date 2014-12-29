@@ -1,17 +1,16 @@
 package net.dimkonko.todo.servlets;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.dimkonko.todo.etc.DatabaseAPI;
+import net.dimkonko.todo.objects.Task;
 
 /**
  * Servlet implementation class EditTaskServlet
@@ -39,45 +38,23 @@ public class EditTaskServlet extends HttpServlet {
 			isDone = "1";
 		} else {
 			isDone = "0";
-		}
+		}		
 		
-		System.out.println("Isdone: " + isDone);
-//		
-//		if (request.getParameter("isDone").equals("on")) {
-//			isDone = "1";
-//		}
-		
-		Connection con = null;
-		Statement st = null;
-		ResultSet rs = null;
-
-		String driverName = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/Todo";
-		String user = "root";
-		String dbpsw = "123456";
-		
-		String sql = String.format("UPDATE `tasks` SET `title`='%s', `isDone`=%s WHERE id=%s",
-				title, isDone, id);
-		System.out.println(sql);
-
 		try {
-			Class.forName(driverName);
-			con = DriverManager.getConnection(url, user, dbpsw);
-			st = con.createStatement();
-			
-			int status = st.executeUpdate(sql);
-			if (status > 0) {
+			boolean status = DatabaseAPI.editTask(new Task(Integer.parseInt(id), title, Byte.parseByte(isDone)));
+			if (status) {
 				response.sendRedirect("/TomcatJDBCExample");
 				return;
-			} else {
-				response.sendError(500);
-				return;
 			}
-		} catch(SQLException sqe) {
-			System.err.println(sqe);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			System.err.println(e);
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		response.sendError(500);
+		
 		response.sendRedirect("/TomcatJDBCExample");
 	}
 }

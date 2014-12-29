@@ -29,45 +29,22 @@ public class AddTaskServlet extends HttpServlet {
     public AddTaskServlet() {
         super();
     }
-    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    		throws ServletException, IOException {
-    }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String title = request.getParameter("title");
-		Connection con = null;
-		Statement st = null;
-		ResultSet rs = null;
-
-		String driverName = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/Todo";
-		String user = "root";
-		String dbpsw = "123456";
-		
-		String sql = String.format("INSERT INTO `tasks`(`title`, `isDone`) VALUES('%s', %s)",
-				title, 0);
-		System.out.println(sql);
-
 		try {
-			Class.forName(driverName);
-			con = DriverManager.getConnection(url, user, dbpsw);
-			st = con.createStatement();
+			boolean status = DatabaseAPI.addTask(title);
 			
-			int status = st.executeUpdate(sql);
-			if (status > 0) {
+			if (status) {
 				response.sendRedirect("/TomcatJDBCExample");
-			} else {
-				response.sendError(500);
+				return;
 			}
-		} catch(SQLException sqe) {
-			System.err.println(sqe);
-		} catch (ClassNotFoundException e) {
-			System.err.println(e);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
 		}
+		response.sendError(500);
 	}
 }
