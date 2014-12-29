@@ -31,9 +31,17 @@ public class EditTaskServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		byte id = Byte.parseByte(request.getParameter("id"));
-		String title = request.getParameter("title");
+		String id = request.getParameter("task_id");
+		String title = request.getParameter("task_title");
 		String isDone = request.getParameter("isDone");
+		
+		System.out.println(isDone);
+		
+		if (isDone.equals("on")) {
+			isDone = "1";
+		} else {
+			isDone = "0";
+		}
 		
 		Connection con = null;
 		Statement st = null;
@@ -56,14 +64,16 @@ public class EditTaskServlet extends HttpServlet {
 			int status = st.executeUpdate(sql);
 			if (status > 0) {
 				response.sendRedirect("/TomcatJDBCExample");
+				return;
 			} else {
 				response.sendError(500);
+				return;
 			}
 		} catch(SQLException sqe) {
 			System.err.println(sqe);
 		} catch (ClassNotFoundException e) {
 			System.err.println(e);
 		}
-		response.sendRedirect("/");
+		response.sendRedirect("/TomcatJDBCExample");
 	}
 }
