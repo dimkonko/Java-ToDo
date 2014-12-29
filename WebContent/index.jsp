@@ -1,7 +1,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="java.sql.*" %>
-<%@page import="net.dimkonko.todo.Task" %>
+<%@page import="net.dimkonko.todo.objects.Task" %>
 <%@page language="java" contentType="text/html; charset=ISO-8859-1"
 pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -31,24 +31,27 @@ try {
 	ps = con.prepareStatement(sql);
 	rs = ps.executeQuery();
 	while(rs.next()) {
+		int id = Integer.parseInt(rs.getString("id"));
 		String title = rs.getString("title");
-		System.out.println("Ttle: " + title);
-		tasks.add(new Task(title, Boolean.parseBoolean("isDone")));
+		Boolean isDone = Boolean.parseBoolean(rs.getString("isDone"));
+		tasks.add(new Task(id, title, isDone));
 	}
 } catch(SQLException sqe) {
 	out.println(sqe);
 }
 %>
-	<a href="addTask">Add Task</a>
+	<a href="addTask.jsp">Add Task</a>
 	<table>
 		<tr>
+			<td>Id</td>
 			<td>Title</td>
 			<td>isDone</td>
 		</tr>
 		<% for (Task task : tasks) {%>
 		<tr>
+			<td> <%=task.getID() %> </td>
 			<td> <%=task.getTitle() %> </td>
-			<td> <%=task.isDone()%> </td>
+			<td> <input type="Checkbox" <% task.isDone() %> /> </td>
 		</tr>
 		<%} %>
 	</table>
