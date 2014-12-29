@@ -1,3 +1,4 @@
+<%@page import="net.dimkonko.todo.etc.DatabaseAPI"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="java.sql.*" %>
@@ -12,35 +13,6 @@ pageEncoding="ISO-8859-1"%>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
-<%
-Connection con= null;
-PreparedStatement ps = null;
-ResultSet rs = null;
-
-List<Task> tasks = new ArrayList<Task>();
-
-String driverName = "com.mysql.jdbc.Driver";
-String url = "jdbc:mysql://localhost:3306/Todo";
-String user = "root";
-String dbpsw = "123456";
-
-String sql = "SELECT * FROM tasks";
-
-try {
-	Class.forName(driverName);
-	con = DriverManager.getConnection(url, user, dbpsw);
-	ps = con.prepareStatement(sql);
-	rs = ps.executeQuery();
-	while(rs.next()) {
-		int id = Integer.parseInt(rs.getString("id"));
-		String title = rs.getString("title");
-		Byte isDone = Byte.parseByte(rs.getString("isDone"));
-		tasks.add(new Task(id, title, isDone));
-	}
-} catch(SQLException sqe) {
-	out.println(sqe);
-}
-%>
 	<a href="addTask.jsp">Add Task</a>
 	<table>
 		<tr>
@@ -48,7 +20,13 @@ try {
 			<td>isDone</td>
 			<td>Edit</td>
 		</tr>
-		<% for (Task task : tasks) {%>
+		<%
+		List<Task> tasks = (ArrayList<Task>) request.getAttribute("servletName");
+		if (tasks == null) {
+			response.sendError(500);
+			return;
+		}
+		for (Task task : tasks) {%>
 		<tr>
 			<td class="task_id"><%=task.getID() %></td>
 			<td class="task_title"><%=task.getTitle() %></td>
