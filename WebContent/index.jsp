@@ -33,7 +33,7 @@ try {
 	while(rs.next()) {
 		int id = Integer.parseInt(rs.getString("id"));
 		String title = rs.getString("title");
-		Boolean isDone = Boolean.parseBoolean(rs.getString("isDone"));
+		Byte isDone = Byte.parseByte(rs.getString("isDone"));
 		tasks.add(new Task(id, title, isDone));
 	}
 } catch(SQLException sqe) {
@@ -43,15 +43,20 @@ try {
 	<a href="addTask.jsp">Add Task</a>
 	<table>
 		<tr>
-			<td>Id</td>
 			<td>Title</td>
 			<td>isDone</td>
+			<td>Edit</td>
 		</tr>
 		<% for (Task task : tasks) {%>
 		<tr>
-			<td> <%=task.getID() %> </td>
 			<td> <%=task.getTitle() %> </td>
-			<td> <input type="Checkbox" <% task.isDone() %> /> </td>
+			<td> <input type="Checkbox" <% if (task.isDone() > 0) {%>checked<% }%>/> </td>
+			<td>
+				<form action="editTask" method="POST">
+					<input type="text" name="editId" value="<%=task.getID() %>" hidden/>
+					<input type="submit" value="Edit"/>
+				</form>
+			</td>
 		</tr>
 		<%} %>
 	</table>
