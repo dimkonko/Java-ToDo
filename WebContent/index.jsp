@@ -9,6 +9,7 @@ pageEncoding="ISO-8859-1"%>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Main</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
 <%
@@ -49,16 +50,38 @@ try {
 		</tr>
 		<% for (Task task : tasks) {%>
 		<tr>
-			<td> <%=task.getTitle() %> </td>
-			<td> <input type="Checkbox" <% if (task.isDone() > 0) {%>checked<% }%>/> </td>
-			<td>
-				<form action="editTask" method="POST">
-					<input type="text" name="editId" value="<%=task.getID() %>" hidden/>
-					<input type="submit" value="Edit"/>
-				</form>
-			</td>
+			<td class="task_id"><%=task.getID() %></td>
+			<td class="task_title"><%=task.getTitle() %></td>
+			<td><input type="Checkbox" <% if (task.isDone() > 0) {%>checked<% }%>/></td>
+			<td><input class="edit_task" type="button" value="Edit" /></td>
 		</tr>
 		<%} %>
 	</table>
+	<div id="edit_div" hidden>
+		Edit:
+		<form  action="editTask" method="POST">
+			<input id="editId" type="text" name="id" />
+			<br><input id="editTitle" type="text" name="title" />
+			<br><input id="editIsDone" type="checkbox" name="isDone"/>
+			<br><input type="submit" value="Edit"/>
+		</form>
+	</div>
+	
+	<script type="text/javascript">
+	(function() {
+		$(".edit_task").on("click", function(event) {
+			var tr = $(this).closest("tr");
+			var id = tr.find(".task_id").html();
+			var title = tr.find(".task_title").html();
+			var isDone = tr.find("input[type=checkbox]").is(':checked');
+		
+			$("#editId").val(id);
+			$("#editTitle").val(title);
+			$("#editIsDone").prop('checked', true);
+			
+			$("#edit_div").show();
+		})
+	})();
+	</script>
 </body>
 </html>
